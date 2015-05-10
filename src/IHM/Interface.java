@@ -21,14 +21,20 @@ import java.awt.event.ActionEvent;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import Core.Calculate;
+import Core.Data;
+import Core.Search;
 
 import java.awt.Component;
 import java.awt.Dimension;
+
 import javax.swing.event.CaretListener;
 import javax.swing.event.CaretEvent;
 
 public class Interface {
 
+	private Calculate calculate;
+	private Search search;
+	
 	private JFrame frmGwtools;
 	private JTextField poIn;
 	private JTextField psIn;
@@ -37,11 +43,11 @@ public class Interface {
 	private JTextField psOut;
 	private JTextField pcOut;
 	private JTextField number;
-	private Calculate core;
 	private JTextField txtCost;
 	private JTextField txtListingFee;
 	private JTextField txtSellingFee;
 	private JTextField txtProfit;
+	private JTextField txtSearch;
 
 	/**
 	 * Launch the application.
@@ -70,7 +76,11 @@ public class Interface {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		core = new Calculate();
+		calculate = new Calculate();
+		search = new Search();
+		//Data.initAPI();
+		
+		
 		frmGwtools = new JFrame();
 		frmGwtools.setMinimumSize(new Dimension(640, 480));
 		frmGwtools.setTitle("GW2Tools");
@@ -80,14 +90,14 @@ public class Interface {
 		JTabbedPane onglets = new JTabbedPane(JTabbedPane.TOP);
 		frmGwtools.getContentPane().add(onglets, BorderLayout.CENTER);
 
-		JPanel Calculate = new JPanel();
-		onglets.addTab("Calculate", null, Calculate, null);
+		JPanel panCalculate = new JPanel();
+		onglets.addTab("Calculate", null, panCalculate, null);
 
 		poIn = new JTextField();
 		poIn.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent arg0) {
 				if (!poIn.getText().isEmpty()) {
-					core.setPoIn(Integer.parseInt(poIn.getText()));
+					calculate.setPoIn(Integer.parseInt(poIn.getText()));
 					refresh();
 				}
 			}
@@ -98,7 +108,7 @@ public class Interface {
 		psIn.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent arg0) {
 				if (!psIn.getText().isEmpty()) {
-					core.setPsIn(Integer.parseInt(psIn.getText()));
+					calculate.setPsIn(Integer.parseInt(psIn.getText()));
 					refresh();
 				}
 			}
@@ -109,7 +119,7 @@ public class Interface {
 		pcIn.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent arg0) {
 				if (!pcIn.getText().isEmpty()) {
-					core.setPcIn(Integer.parseInt(pcIn.getText()));
+					calculate.setPcIn(Integer.parseInt(pcIn.getText()));
 					refresh();
 				}
 			}
@@ -120,7 +130,7 @@ public class Interface {
 		poOut.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent arg0) {
 				if (!poOut.getText().isEmpty()) {
-					core.setPoOut(Integer.parseInt(poOut.getText()));
+					calculate.setPoOut(Integer.parseInt(poOut.getText()));
 					refresh();
 				}
 			}
@@ -131,7 +141,7 @@ public class Interface {
 		psOut.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent arg0) {
 				if (!psOut.getText().isEmpty()) {
-					core.setPsOut(Integer.parseInt(psOut.getText()));
+					calculate.setPsOut(Integer.parseInt(psOut.getText()));
 					refresh();
 				}
 			}
@@ -142,7 +152,7 @@ public class Interface {
 		pcOut.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent arg0) {
 				if (!pcOut.getText().isEmpty()) {
-					core.setPcOut(Integer.parseInt(pcOut.getText()));
+					calculate.setPcOut(Integer.parseInt(pcOut.getText()));
 					refresh();
 				}
 			}
@@ -157,7 +167,7 @@ public class Interface {
 		number.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent arg0) {
 				if (!number.getText().isEmpty()) {
-					core.setNumber(Integer.parseInt(number.getText()));
+					calculate.setNumber(Integer.parseInt(number.getText()));
 					refresh();
 				}
 			}
@@ -223,16 +233,16 @@ public class Interface {
 		JLabel lblBuyingPrice = new JLabel("Buying price");
 
 		JLabel lblSellingPrice = new JLabel("Selling price");
-		GroupLayout gl_Calculate = new GroupLayout(Calculate);
-		gl_Calculate
-				.setHorizontalGroup(gl_Calculate
+		GroupLayout gl_panCalculate = new GroupLayout(panCalculate);
+		gl_panCalculate
+				.setHorizontalGroup(gl_panCalculate
 						.createParallelGroup(Alignment.LEADING)
 						.addGroup(
-								gl_Calculate
+								gl_panCalculate
 										.createSequentialGroup()
 										.addContainerGap()
 										.addGroup(
-												gl_Calculate
+												gl_panCalculate
 														.createParallelGroup(
 																Alignment.LEADING)
 														.addComponent(
@@ -242,27 +252,27 @@ public class Interface {
 										.addPreferredGap(
 												ComponentPlacement.RELATED)
 										.addGroup(
-												gl_Calculate
+												gl_panCalculate
 														.createParallelGroup(
 																Alignment.LEADING)
 														.addGroup(
-																gl_Calculate
+																gl_panCalculate
 																		.createSequentialGroup()
 																		.addComponent(
 																				lblProfitAfterSeling)
 																		.addContainerGap())
 														.addGroup(
-																gl_Calculate
+																gl_panCalculate
 																		.createSequentialGroup()
 																		.addGroup(
-																				gl_Calculate
+																				gl_panCalculate
 																						.createParallelGroup(
 																								Alignment.LEADING)
 																						.addGroup(
-																								gl_Calculate
+																								gl_panCalculate
 																										.createSequentialGroup()
 																										.addGroup(
-																												gl_Calculate
+																												gl_panCalculate
 																														.createParallelGroup(
 																																Alignment.TRAILING)
 																														.addComponent(
@@ -278,7 +288,7 @@ public class Interface {
 																										.addPreferredGap(
 																												ComponentPlacement.RELATED)
 																										.addGroup(
-																												gl_Calculate
+																												gl_panCalculate
 																														.createParallelGroup(
 																																Alignment.TRAILING)
 																														.addComponent(
@@ -287,7 +297,7 @@ public class Interface {
 																																lblPo))
 																										.addGap(18)
 																										.addGroup(
-																												gl_Calculate
+																												gl_panCalculate
 																														.createParallelGroup(
 																																Alignment.LEADING)
 																														.addComponent(
@@ -303,7 +313,7 @@ public class Interface {
 																										.addPreferredGap(
 																												ComponentPlacement.RELATED)
 																										.addGroup(
-																												gl_Calculate
+																												gl_panCalculate
 																														.createParallelGroup(
 																																Alignment.LEADING)
 																														.addComponent(
@@ -313,7 +323,7 @@ public class Interface {
 																										.addPreferredGap(
 																												ComponentPlacement.RELATED)
 																										.addGroup(
-																												gl_Calculate
+																												gl_panCalculate
 																														.createParallelGroup(
 																																Alignment.TRAILING)
 																														.addComponent(
@@ -322,10 +332,10 @@ public class Interface {
 																																202,
 																																Short.MAX_VALUE)
 																														.addGroup(
-																																gl_Calculate
+																																gl_panCalculate
 																																		.createSequentialGroup()
 																																		.addGroup(
-																																				gl_Calculate
+																																				gl_panCalculate
 																																						.createParallelGroup(
 																																								Alignment.LEADING)
 																																						.addComponent(
@@ -341,7 +351,7 @@ public class Interface {
 																																		.addPreferredGap(
 																																				ComponentPlacement.RELATED)
 																																		.addGroup(
-																																				gl_Calculate
+																																				gl_panCalculate
 																																						.createParallelGroup(
 																																								Alignment.LEADING)
 																																						.addComponent(
@@ -353,7 +363,7 @@ public class Interface {
 																																				114,
 																																				Short.MAX_VALUE)
 																																		.addGroup(
-																																				gl_Calculate
+																																				gl_panCalculate
 																																						.createParallelGroup(
 																																								Alignment.LEADING)
 																																						.addComponent(
@@ -367,7 +377,7 @@ public class Interface {
 																										.addPreferredGap(
 																												ComponentPlacement.RELATED))
 																						.addGroup(
-																								gl_Calculate
+																								gl_panCalculate
 																										.createSequentialGroup()
 																										.addComponent(
 																												number,
@@ -380,7 +390,7 @@ public class Interface {
 																												lblNewLabel)))
 																		.addGap(21)
 																		.addGroup(
-																				gl_Calculate
+																				gl_panCalculate
 																						.createParallelGroup(
 																								Alignment.LEADING)
 																						.addComponent(
@@ -404,15 +414,15 @@ public class Interface {
 																								GroupLayout.DEFAULT_SIZE,
 																								GroupLayout.PREFERRED_SIZE))
 																		.addGap(97)))));
-		gl_Calculate
-				.setVerticalGroup(gl_Calculate
+		gl_panCalculate
+				.setVerticalGroup(gl_panCalculate
 						.createParallelGroup(Alignment.LEADING)
 						.addGroup(
-								gl_Calculate
+								gl_panCalculate
 										.createSequentialGroup()
 										.addGap(28)
 										.addGroup(
-												gl_Calculate
+												gl_panCalculate
 														.createParallelGroup(
 																Alignment.BASELINE)
 														.addComponent(Po)
@@ -444,7 +454,7 @@ public class Interface {
 																lblBuyingPrice))
 										.addGap(21)
 										.addGroup(
-												gl_Calculate
+												gl_panCalculate
 														.createParallelGroup(
 																Alignment.BASELINE)
 														.addComponent(
@@ -456,7 +466,7 @@ public class Interface {
 																GroupLayout.PREFERRED_SIZE))
 										.addGap(18)
 										.addGroup(
-												gl_Calculate
+												gl_panCalculate
 														.createParallelGroup(
 																Alignment.BASELINE)
 														.addComponent(
@@ -488,7 +498,7 @@ public class Interface {
 																lblSellingPrice))
 										.addGap(35)
 										.addGroup(
-												gl_Calculate
+												gl_panCalculate
 														.createParallelGroup(
 																Alignment.BASELINE)
 														.addComponent(
@@ -508,19 +518,34 @@ public class Interface {
 										.addComponent(lblProfitAfterSeling)
 										.addGap(7).addComponent(btnBuy)
 										.addContainerGap(169, Short.MAX_VALUE)));
-		Calculate.setLayout(gl_Calculate);
+		panCalculate.setLayout(gl_panCalculate);
+		
+		JPanel panSearch = new JPanel();
+		onglets.addTab("Search Item", null, panSearch, null);
+		
+		JLabel lblItemName = new JLabel("Item name");
+		panSearch.add(lblItemName);
+		
+		txtSearch = new JTextField();
+		txtSearch.addCaretListener(new CaretListener() {
+			public void caretUpdate(CaretEvent arg0) {
+				search.updateName(txtSearch.getText());
+			}
+		});
+		panSearch.add(txtSearch);
+		txtSearch.setColumns(50);
 		frmGwtools.setFocusTraversalPolicy(new FocusTraversalOnArray(
 				new Component[] { frmGwtools.getContentPane(), onglets,
-						Calculate, lblBenef, lblNewLabel_1, lblListingFee,
+						panCalculate, lblBenef, lblNewLabel_1, lblListingFee,
 						lblSellingFee, btnBuy, number, lblNewLabel, poIn,
 						poOut, Po, psIn, psOut, pcIn, pcOut }));
 	}
 
 	private void refresh() {
 		//txtCost.setText(core.getCost());
-		txtSellingFee.setText(core.getSellingFee());
-		txtListingFee.setText(core.getListingFee());
-		txtProfit.setText(core.getProfit());
+		txtSellingFee.setText(calculate.getSellingFee());
+		txtListingFee.setText(calculate.getListingFee());
+		txtProfit.setText(calculate.getProfit());
 
 	}
 }
