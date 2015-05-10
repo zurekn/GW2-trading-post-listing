@@ -1,5 +1,9 @@
 package Core;
 
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.RemoteException;
 
 import cz.zweistein.gw2.api.GW2API;;
@@ -10,12 +14,7 @@ public class Search {
 	
 	
 	public Search(){
-		try {
-			GW2API api = new GW2API();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 	
 	public void updateName(String name){

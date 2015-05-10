@@ -1,12 +1,16 @@
 package Core;
 
+
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 
 import cz.zweistein.gw2.api.GW2API;
-import cz.zweistein.gw2.api.dao.*;
+import cz.zweistein.gw2.api.dao.OnlineJsonDao;
+import cz.zweistein.gw2.api.dto.items.Item;
 import cz.zweistein.gw2.api.util.SupportedLanguage;
+
 
 public class Data {
 
@@ -18,11 +22,10 @@ public class Data {
 		
 	
 		try {
-		
 			
 			api = new GW2API();
 			loadItem();
-		} catch (RemoteException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -31,12 +34,16 @@ public class Data {
 	}
 	
 	public static void loadItem() throws RemoteException{
-		List<Long> i = api.getItems();
-        for (Long id : i) {
-               String name =  api.getItemDetails(id, SupportedLanguage.FRENCH).getName();
-               items.put(id, name);
-        }
-        System.out.println("Load ["+items.size()+"] items");
+		List<Long> items;
+		try {
+			items = api.getItems();
+
+			System.out.println("Load ["+items.toString()+"] items");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
 	}
 	
 	public static String getItem(String name){

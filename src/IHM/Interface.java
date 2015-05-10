@@ -78,7 +78,7 @@ public class Interface {
 	private void initialize() {
 		calculate = new Calculate();
 		search = new Search();
-		//Data.initAPI();
+		Data.initAPI();
 		
 		
 		frmGwtools = new JFrame();
