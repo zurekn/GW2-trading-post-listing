@@ -48,11 +48,10 @@ public class AutoSuggestor {
 	};
 	private final Color suggestionsTextColor;
 	private final Color suggestionFocusedColor;
-	private Data data;
 
 	public AutoSuggestor(JTextField textField, Window mainWindow,
 			ArrayList<String> words, Color popUpBackground, Color textColor,
-			Color suggestionFocusedColor, float opacity, Data data) {
+			Color suggestionFocusedColor, float opacity) {
 		this.textField = textField;
 		this.suggestionsTextColor = textColor;
 		this.container = mainWindow;
@@ -60,6 +59,8 @@ public class AutoSuggestor {
 		this.textField.getDocument().addDocumentListener(documentListener);
 
 		setDictionary(words);
+
+		// extractDictionary(data);
 
 		typedWord = "";
 		currentIndexOfSpace = 0;
@@ -74,7 +75,6 @@ public class AutoSuggestor {
 		suggestionsPanel.setBackground(popUpBackground);
 
 		addKeyBindingToRequestFocusInPopUpWindow();
-		this.data = data;
 	}
 
 	private void addKeyBindingToRequestFocusInPopUpWindow() {
@@ -255,15 +255,15 @@ public class AutoSuggestor {
 		int windowX = 0;
 		int windowY = 0;
 
-		windowX = container.getX() + textField.getX() + 5;
+		windowX = container.getX() + textField.getX() + 10;
 		if (suggestionsPanel.getHeight() > autoSuggestionPopUpWindow
 				.getMinimumSize().height) {
-			windowY = container.getY() + textField.getY()
-					+ textField.getHeight()
+			windowY = 5 + container.getY() + textField.getY()
+					+ textField.getHeight() + textField.getHeight()
 					+ autoSuggestionPopUpWindow.getMinimumSize().height;
 		} else {
-			windowY = container.getY() + textField.getY()
-					+ textField.getHeight()
+			windowY = 5 + container.getY() + textField.getY()
+					+ textField.getHeight() + textField.getHeight()
 					+ autoSuggestionPopUpWindow.getHeight();
 		}
 
@@ -285,8 +285,8 @@ public class AutoSuggestor {
 			dictionary.add(word);
 		}
 	}
-	
-	public void addWord(String word){
+
+	public void addWord(String word) {
 		dictionary.add(word);
 	}
 
@@ -308,6 +308,7 @@ public class AutoSuggestor {
 
 	protected boolean wordTyped(String typedWord) {
 
+		System.out.println("Begin the wordTyped");
 		if (typedWord.isEmpty()) {
 			return false;
 		}
@@ -315,21 +316,21 @@ public class AutoSuggestor {
 
 		boolean suggestionAdded = false;
 
-		for (ShortItem item : data.getItems()) {// get words in the dictionary which we
-										// added
+		for (ShortItem s : Data.itemSuggestor) {
+			/* get words in the dictionary which we added */
 			boolean fullymatches = true;
-			for (int i = 0; i < typedWord.length(); i++) {// each string in the
-															// word
-				if (!typedWord.toLowerCase().startsWith(
-						String.valueOf(item.name.toLowerCase().charAt(i)), i)) {// check
-																			// for
-																			// match
-					fullymatches = false;
-					break;
-				}
-			}
-			if (fullymatches) {
-				addWordToSuggestions(item.name);
+
+//			for (int i = 0; i < typedWord.length(); i++) {
+//				/* each string in the word */
+//				if (!typedWord.toLowerCase().startsWith(
+//						String.valueOf(s.name.toLowerCase().charAt(i)), i)) {
+//					/* check for match */
+//					fullymatches = false;
+//					break;
+//				}
+//			}
+			if (fullymatches || !fullymatches) {
+				addWordToSuggestions(s.name);
 				suggestionAdded = true;
 			}
 		}

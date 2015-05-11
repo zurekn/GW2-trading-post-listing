@@ -24,6 +24,7 @@ import Core.AutoSuggestor;
 import Core.Calculate;
 import Core.Data;
 import Core.Search;
+import Core.ShortItem;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -32,13 +33,22 @@ import java.util.ArrayList;
 
 import javax.swing.event.CaretListener;
 import javax.swing.event.CaretEvent;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import javax.swing.SpringLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.BoxLayout;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.SwingConstants;
 
 public class Interface {
 
 	private Calculate calculate;
 	private Search search;
 	private Data data;
-	
+
 	private JFrame frmGwtools;
 	private JTextField poIn;
 	private JTextField psIn;
@@ -55,7 +65,7 @@ public class Interface {
 
 	private JPanel panSearch;
 	private JLabel lblItemName;
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -85,10 +95,8 @@ public class Interface {
 	private void initialize() {
 		calculate = new Calculate();
 		search = new Search();
-		data = new Data(this);
 		data.initAPI();
-		
-		
+
 		frmGwtools = new JFrame();
 		frmGwtools.setMinimumSize(new Dimension(640, 480));
 		frmGwtools.setTitle("GW2Tools");
@@ -180,7 +188,6 @@ public class Interface {
 				}
 			}
 		});
-		
 
 		JLabel lblNewLabel = new JLabel("Number");
 
@@ -527,47 +534,37 @@ public class Interface {
 										.addGap(7).addComponent(btnBuy)
 										.addContainerGap(169, Short.MAX_VALUE)));
 		panCalculate.setLayout(gl_panCalculate);
-		
+
 		panSearch = new JPanel();
 		onglets.addTab("Search Item", null, panSearch, null);
 		panSearch.setEnabled(false);
-		
-		lblItemName = new JLabel("Item name (load 0)");
-		panSearch.add(lblItemName);
-		
-		
-		
+		panSearch
+				.setLayout(new MigLayout("", "[91px][528px]", "[][][][413px]"));
+
 		txtSearch = new JTextField();
 		txtSearch.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent arg0) {
-				 AutoSuggestor autoSuggestor = new AutoSuggestor(txtSearch, frmGwtools, null, Color.WHITE.brighter(), Color.BLUE, Color.RED, 0.75f, data) {
-			            protected boolean wordTyped(String typedWord) {
-			            	/*	
-			                //create list for dictionary this in your case might be done via calling a method which queries db and returns results as arraylist
-			                ArrayList<String> words = new ArrayList<>();
-			                words.add("hello");
-			                words.add("heritage");
-			                words.add("happiness");
-			                words.add("goodbye");
-			                words.add("cruel");
-			                words.add("car");
-			                words.add("war");
-			                words.add("will");
-			                words.add("world");
-			                words.add("wall");
 
-
-			                setDictionary(words);
-			                //addToDictionary("bye");//adds a single word
-							*/
-			                return super.wordTyped(typedWord);//now call super to check for any matches against newest dictionary
-			            }
-			        };
+				AutoSuggestor autoSuggestor = new AutoSuggestor(txtSearch,
+						frmGwtools, null, Color.WHITE.brighter(), Color.BLUE,
+						Color.RED, 0.75f);
 				search.updateName(txtSearch.getText());
+
 			}
 		});
-		panSearch.add(txtSearch);
+
+		lblItemName = new JLabel("Item name (load 0)");
+		panSearch.add(lblItemName, "cell 0 1,alignx left,aligny center");
+		panSearch.add(txtSearch, "cell 1 1,alignx center,aligny center");
 		txtSearch.setColumns(50);
+
+		JButton btnBuy_1 = new JButton("Buy");
+		btnBuy_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+			}
+		});
+		panSearch.add(btnBuy_1, "cell 1 2,alignx center");
 		frmGwtools.setFocusTraversalPolicy(new FocusTraversalOnArray(
 				new Component[] { frmGwtools.getContentPane(), onglets,
 						panCalculate, lblBenef, lblNewLabel_1, lblListingFee,
@@ -575,17 +572,17 @@ public class Interface {
 						poOut, Po, psIn, psOut, pcIn, pcOut }));
 	}
 
-	public void connected(){
+	public void connected() {
 		panSearch.setEnabled(true);
-		
+
 	}
-	
-	public void refreshCount(int i){
-		lblItemName.setText("Item name (load "+i+")");
+
+	public void refreshCount(int i) {
+		lblItemName.setText("Item name (load " + i + ")");
 	}
-	
+
 	private void refresh() {
-		//txtCost.setText(core.getCost());
+		// txtCost.setText(core.getCost());
 		txtSellingFee.setText(calculate.getSellingFee());
 		txtListingFee.setText(calculate.getListingFee());
 		txtProfit.setText(calculate.getProfit());

@@ -1,10 +1,13 @@
 package Core;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,14 +17,23 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class Data {
 
-	private static final String gw2url = "http://www.gw2spidy.com/api/v0.9/json/";
-	private static HashMap<Long, String> items = new HashMap<Long, String>();
-
+	private static final String gw2url = "http://www.gw2shinies.com/api/json/";// "http://www.gw2spidy.com/api/v0.9/json/";
+	public static final String idTag = "item_id";
+	public static final String nameTag = "name";
 	public static StorageHandler storageHandler;
+	public static final int maxArraySize = 30;
+
+	public static enum apiFunction {
+		idbyname, recipe, item, forge
+	};
+
+	public static ArrayList<ShortItem> itemSuggestor = new ArrayList<ShortItem>();
 
 	public static void initAPI() {
 		try {
@@ -36,7 +48,7 @@ public class Data {
 
 	}
 
-	private static String readUrl(String urlString) throws Exception {
+	private static String readUrl(String urlString) throws IOException {
 		BufferedReader reader = null;
 		try {
 			URL url = new URL(urlString);
@@ -55,24 +67,30 @@ public class Data {
 	}
 
 	public static JSONArray getItem(String name) {
+		if (name.length() < 3)
+			return null;
 		name = parseForURL(name);
-		String url = gw2url + "item-search/" + name;
+		String url = gw2url + apiFunction.idbyname + "/" + name;
 		System.out.println("Connecting to " + url);
 		JSONObject json = new JSONObject();
 		JSONParser parser = new JSONParser();
 		JSONArray array = null;
 		try {
-			json = (JSONObject) parser.parse(readUrl(url));
+			array = (JSONArray) parser.parse(readUrl(url));
+			if (array == null)
+				return null;
+			while (array.size() > maxArraySize)
+				array.remove(array.size());
+			// json = (JSONObject) parser.parse(readUrl(url));
 			System.out.println("---------------Info sur le JSON--------------");
-			System.out.println("ToString : " + json.toJSONString());
-
-			array = (JSONArray) json.get("results");
+			System.out.println("ToString : " + array.toJSONString());
+			// array = (JSONArray) json.get("results");
 			Iterator it = array.iterator();
 			JSONObject obj;
 
-		} catch (Exception e) {
+		} catch (IOException | ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return array;
 	}
