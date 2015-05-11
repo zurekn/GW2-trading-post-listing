@@ -65,6 +65,7 @@ public class Data {
 			for(String s : split){
 				if(!first) name += "%20";
 				name += s;
+				first = false;
 			}
 		}
 		
