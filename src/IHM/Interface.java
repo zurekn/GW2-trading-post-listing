@@ -20,12 +20,15 @@ import java.awt.event.ActionEvent;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
+import Core.AutoSuggestor;
 import Core.Calculate;
 import Core.Data;
 import Core.Search;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.event.CaretListener;
 import javax.swing.event.CaretEvent;
@@ -34,6 +37,7 @@ public class Interface {
 
 	private Calculate calculate;
 	private Search search;
+	private Data data;
 	
 	private JFrame frmGwtools;
 	private JTextField poIn;
@@ -49,6 +53,9 @@ public class Interface {
 	private JTextField txtProfit;
 	private JTextField txtSearch;
 
+	private JPanel panSearch;
+	private JLabel lblItemName;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -78,7 +85,8 @@ public class Interface {
 	private void initialize() {
 		calculate = new Calculate();
 		search = new Search();
-		Data.initAPI();
+		data = new Data(this);
+		data.initAPI();
 		
 		
 		frmGwtools = new JFrame();
@@ -520,15 +528,41 @@ public class Interface {
 										.addContainerGap(169, Short.MAX_VALUE)));
 		panCalculate.setLayout(gl_panCalculate);
 		
-		JPanel panSearch = new JPanel();
+		panSearch = new JPanel();
 		onglets.addTab("Search Item", null, panSearch, null);
+		panSearch.setEnabled(false);
 		
-		JLabel lblItemName = new JLabel("Item name");
+		lblItemName = new JLabel("Item name (load 0)");
 		panSearch.add(lblItemName);
+		
+		
 		
 		txtSearch = new JTextField();
 		txtSearch.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent arg0) {
+				 AutoSuggestor autoSuggestor = new AutoSuggestor(txtSearch, frmGwtools, null, Color.WHITE.brighter(), Color.BLUE, Color.RED, 0.75f, data) {
+			            protected boolean wordTyped(String typedWord) {
+			            	/*	
+			                //create list for dictionary this in your case might be done via calling a method which queries db and returns results as arraylist
+			                ArrayList<String> words = new ArrayList<>();
+			                words.add("hello");
+			                words.add("heritage");
+			                words.add("happiness");
+			                words.add("goodbye");
+			                words.add("cruel");
+			                words.add("car");
+			                words.add("war");
+			                words.add("will");
+			                words.add("world");
+			                words.add("wall");
+
+
+			                setDictionary(words);
+			                //addToDictionary("bye");//adds a single word
+							*/
+			                return super.wordTyped(typedWord);//now call super to check for any matches against newest dictionary
+			            }
+			        };
 				search.updateName(txtSearch.getText());
 			}
 		});
@@ -541,6 +575,15 @@ public class Interface {
 						poOut, Po, psIn, psOut, pcIn, pcOut }));
 	}
 
+	public void connected(){
+		panSearch.setEnabled(true);
+		
+	}
+	
+	public void refreshCount(int i){
+		lblItemName.setText("Item name (load "+i+")");
+	}
+	
 	private void refresh() {
 		//txtCost.setText(core.getCost());
 		txtSellingFee.setText(calculate.getSellingFee());

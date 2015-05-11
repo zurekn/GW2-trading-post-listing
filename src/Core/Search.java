@@ -19,6 +19,6 @@ public class Search {
 	
 	public void updateName(String name){
 		this.name = name;
-		Data.getItem(name);
+		
 	}
 }
