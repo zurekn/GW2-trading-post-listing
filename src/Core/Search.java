@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
+import org.json.simple.JSONArray;
+
 
 public class Search {
 
@@ -16,8 +18,18 @@ public class Search {
 
 	}
 	
+	public void selectItem(String nane){
+		try {
+			Data.storageHandler.saveSearch(name, "2");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void updateName(String name){
 		this.name = name;
-		Data.getItem(name);
+		JSONArray result = Data.getItem(name);
+		
 	}
 }

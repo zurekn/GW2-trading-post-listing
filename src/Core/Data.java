@@ -26,12 +26,16 @@ public class Data {
 
 	private static final String gw2url = "http://www.gw2spidy.com/api/v0.9/json/"; 
 	private static HashMap<Long, String> items = new HashMap<Long, String>();
-	public static void initAPI(){
-		
 	
-		
-		
-		
+	public static StorageHandler storageHandler;
+	
+	public static void initAPI(){		
+		try {
+			storageHandler = new StorageHandler();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void loadItem() throws RemoteException{
@@ -57,7 +61,7 @@ public class Data {
 	    }
 	}
 	
-	public static String getItem(String name){
+	public static JSONArray getItem(String name){
 		String[] split = name.split(" ");
 		if(split.length > 1){
 			boolean first = true;
@@ -73,24 +77,20 @@ public class Data {
 		System.out.println("Connecting to "+url);
 		JSONObject json = new JSONObject();
 		JSONParser parser = new JSONParser();
+		JSONArray array = null;
 		try {
 			json = (JSONObject) parser.parse(readUrl(url));
 			System.out.println("---------------Info sur le JSON--------------");
 			System.out.println("ToString : "+json.toJSONString());
 	
-			JSONArray array = (JSONArray) json.get("results");
+			array = (JSONArray) json.get("results");
 			Iterator it = array.iterator();
-			JSONObject obj;
-			while(it.hasNext()){
-				obj = (JSONObject) parser.parse(it.next().toString());
-				System.out.println(obj.get("name")+", "+obj.get("data_id"));
-			}
-			
+			JSONObject obj;			
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "";
+		return array;
 	}
 }
