@@ -36,12 +36,9 @@ import javax.swing.event.CaretEvent;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.SpringLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.BoxLayout;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.SwingConstants;
+import net.miginfocom.swing.MigLayout;
 
 public class Interface {
 
@@ -105,6 +102,38 @@ public class Interface {
 
 		JTabbedPane onglets = new JTabbedPane(JTabbedPane.TOP);
 		frmGwtools.getContentPane().add(onglets, BorderLayout.CENTER);
+		
+				panSearch = new JPanel();
+				onglets.addTab("Search Item", null, panSearch, null);
+				panSearch.setEnabled(false);
+				panSearch
+						.setLayout(new MigLayout("", "[91px][528px]", "[][][][413px]"));
+						panSearch.setLayout(new MigLayout("", "[1px][][][][][][][][][]", "[1px][][][][][][][][][][][][][]"));
+										
+												txtSearch = new JTextField();
+												txtSearch.addCaretListener(new CaretListener() {
+													public void caretUpdate(CaretEvent arg0) {
+
+														AutoSuggestor autoSuggestor = new AutoSuggestor(txtSearch,
+																frmGwtools, null, Color.WHITE.brighter(), Color.BLUE,
+																Color.RED, 0.75f);
+														search.updateName(txtSearch.getText());
+
+													}
+												});
+												
+														lblItemName = new JLabel("Item name (load 0)");
+														panSearch.add(lblItemName, "cell 3 1,grow");
+												panSearch.add(txtSearch, "flowx,cell 9 1,grow");
+												txtSearch.setColumns(50);
+														
+																JButton btnBuy_1 = new JButton("Buy");
+																btnBuy_1.addActionListener(new ActionListener() {
+																	public void actionPerformed(ActionEvent arg0) {
+
+																	}
+																});
+																panSearch.add(btnBuy_1, "cell 9 4,grow");
 
 		JPanel panCalculate = new JPanel();
 		onglets.addTab("Calculate", null, panCalculate, null);
@@ -534,37 +563,6 @@ public class Interface {
 										.addGap(7).addComponent(btnBuy)
 										.addContainerGap(169, Short.MAX_VALUE)));
 		panCalculate.setLayout(gl_panCalculate);
-
-		panSearch = new JPanel();
-		onglets.addTab("Search Item", null, panSearch, null);
-		panSearch.setEnabled(false);
-		panSearch
-				.setLayout(new MigLayout("", "[91px][528px]", "[][][][413px]"));
-
-		txtSearch = new JTextField();
-		txtSearch.addCaretListener(new CaretListener() {
-			public void caretUpdate(CaretEvent arg0) {
-
-				AutoSuggestor autoSuggestor = new AutoSuggestor(txtSearch,
-						frmGwtools, null, Color.WHITE.brighter(), Color.BLUE,
-						Color.RED, 0.75f);
-				search.updateName(txtSearch.getText());
-
-			}
-		});
-
-		lblItemName = new JLabel("Item name (load 0)");
-		panSearch.add(lblItemName, "cell 0 1,alignx left,aligny center");
-		panSearch.add(txtSearch, "cell 1 1,alignx center,aligny center");
-		txtSearch.setColumns(50);
-
-		JButton btnBuy_1 = new JButton("Buy");
-		btnBuy_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
-		panSearch.add(btnBuy_1, "cell 1 2,alignx center");
 		frmGwtools.setFocusTraversalPolicy(new FocusTraversalOnArray(
 				new Component[] { frmGwtools.getContentPane(), onglets,
 						panCalculate, lblBenef, lblNewLabel_1, lblListingFee,

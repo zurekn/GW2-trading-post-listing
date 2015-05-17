@@ -23,7 +23,8 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class Data {
 
-	private static final String gw2url = "http://www.gw2shinies.com/api/json/";// "http://www.gw2spidy.com/api/v0.9/json/";
+	public static final String GW2_OFFICIAL_API = "https://api.guildwars2.com/v2";
+	private static final String gw2url = "http://www.gw2shinies.com/api/json/";
 	public static final String idTag = "item_id";
 	public static final String nameTag = "name";
 	public static StorageHandler storageHandler;
@@ -48,7 +49,7 @@ public class Data {
 
 	}
 
-	private static String readUrl(String urlString) throws IOException {
+	public static String readUrl(String urlString) throws IOException {
 		BufferedReader reader = null;
 		try {
 			URL url = new URL(urlString);
